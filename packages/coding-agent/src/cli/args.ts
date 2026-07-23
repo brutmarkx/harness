@@ -210,6 +210,7 @@ export function parseArgs(args: string[]): Args {
 }
 
 export function printHelp(extensionFlags?: ExtensionFlag[]): void {
+	const commandName = process.env.HARNESS_COMMAND_NAME?.trim() || APP_NAME;
 	const extensionFlagsText =
 		extensionFlags && extensionFlags.length > 0
 			? `\n${chalk.bold("Extension CLI Flags:")}\n${extensionFlags
@@ -220,19 +221,19 @@ export function printHelp(extensionFlags?: ExtensionFlag[]): void {
 					})
 					.join("\n")}\n`
 			: "";
-	console.log(`${chalk.bold(APP_NAME)} - AI coding assistant with read, bash, edit, write tools
+	console.log(`${chalk.bold("CLI harness")} - AI coding assistant with read, bash, edit, write tools
 
 ${chalk.bold("Usage:")}
-  ${APP_NAME} [options] [@files...] [messages...]
+  ${commandName} [options] [@files...] [messages...]
 
 ${chalk.bold("Commands:")}
-  ${APP_NAME} install <source> [-l]     Install extension source and add to settings
-  ${APP_NAME} remove <source> [-l]      Remove extension source from settings
-  ${APP_NAME} uninstall <source> [-l]   Alias for remove
-  ${APP_NAME} update [source|self|pi]   Update pi, extensions, or model catalogs
-  ${APP_NAME} list                      List installed extensions from settings
-  ${APP_NAME} config [-l]               Open TUI to enable/disable package resources (Tab switches scope)
-  ${APP_NAME} <command> --help          Show help for install/remove/uninstall/update/list/config
+  ${commandName} install <source> [-l]     Install extension source and add to settings
+  ${commandName} remove <source> [-l]      Remove extension source from settings
+  ${commandName} uninstall <source> [-l]   Alias for remove
+  ${commandName} update [source|self]      Update the CLI harness, extensions, or model catalogs
+  ${commandName} list                      List installed extensions from settings
+  ${commandName} config [-l]               Open TUI to enable/disable package resources (Tab switches scope)
+  ${commandName} <command> --help          Show help for install/remove/uninstall/update/list/config
 
 ${chalk.bold("Options:")}
   --provider <name>              Provider name (default: google)
@@ -281,56 +282,56 @@ Extensions can register additional flags (e.g., --plan from plan-mode extension)
 
 ${chalk.bold("Examples:")}
   # Interactive mode
-  ${APP_NAME}
+  ${commandName}
 
   # Interactive mode with initial prompt
-  ${APP_NAME} "List all .ts files in src/"
+  ${commandName} "List all .ts files in src/"
 
   # Include files in initial message
-  ${APP_NAME} @prompt.md @image.png "What color is the sky?"
+  ${commandName} @prompt.md @image.png "What color is the sky?"
 
   # Non-interactive mode (process and exit)
-  ${APP_NAME} -p "List all .ts files in src/"
+  ${commandName} -p "List all .ts files in src/"
 
   # Multiple messages (interactive)
-  ${APP_NAME} "Read package.json" "What dependencies do we have?"
+  ${commandName} "Read package.json" "What dependencies do we have?"
 
   # Continue previous session
-  ${APP_NAME} --continue "What did we discuss?"
+  ${commandName} --continue "What did we discuss?"
 
   # Start a named session
-  ${APP_NAME} --name "Refactor auth module"
+  ${commandName} --name "Refactor auth module"
 
   # Use different model
-  ${APP_NAME} --provider openai --model gpt-4o-mini "Help me refactor this code"
+  ${commandName} --provider openai --model gpt-4o-mini "Help me refactor this code"
 
   # Use model with provider prefix (no --provider needed)
-  ${APP_NAME} --model openai/gpt-4o "Help me refactor this code"
+  ${commandName} --model openai/gpt-4o "Help me refactor this code"
 
   # Use model with thinking level shorthand
-  ${APP_NAME} --model sonnet:high "Solve this complex problem"
+  ${commandName} --model sonnet:high "Solve this complex problem"
 
   # Limit model cycling to specific models
-  ${APP_NAME} --models claude-sonnet,claude-haiku,gpt-4o
+  ${commandName} --models claude-sonnet,claude-haiku,gpt-4o
 
   # Limit to a specific provider with glob pattern
-  ${APP_NAME} --models "github-copilot/*"
+  ${commandName} --models "github-copilot/*"
 
   # Cycle models with fixed thinking levels
-  ${APP_NAME} --models sonnet:high,haiku:low
+  ${commandName} --models sonnet:high,haiku:low
 
   # Start with a specific thinking level
-  ${APP_NAME} --thinking high "Solve this complex problem"
+  ${commandName} --thinking high "Solve this complex problem"
 
   # Read-only mode (no file modifications possible)
-  ${APP_NAME} --tools read,grep,find,ls -p "Review the code in src/"
+  ${commandName} --tools read,grep,find,ls -p "Review the code in src/"
 
   # Disable one tool while keeping the rest available
-  ${APP_NAME} --exclude-tools ask_question
+  ${commandName} --exclude-tools ask_question
 
   # Export a session file to HTML
-  ${APP_NAME} --export ~/${CONFIG_DIR_NAME}/agent/sessions/--path--/session.jsonl
-  ${APP_NAME} --export session.jsonl output.html
+  ${commandName} --export ~/${CONFIG_DIR_NAME}/agent/sessions/--path--/session.jsonl
+  ${commandName} --export session.jsonl output.html
 
 ${chalk.bold("Environment Variables:")}
   ANTHROPIC_API_KEY                - Anthropic Claude API key
@@ -378,7 +379,7 @@ ${chalk.bold("Environment Variables:")}
   PI_PACKAGE_DIR                   - Override package directory (for Nix/Guix store paths)
   PI_OFFLINE                       - Disable startup network operations when set to 1/true/yes
   PI_TELEMETRY                     - Override install telemetry when set to 1/true/yes or 0/false/no
-  PI_SHARE_VIEWER_URL              - Base URL for /share command (default: https://pi.dev/session/)
+  PI_SHARE_VIEWER_URL              - Base URL for /share command
 
 ${chalk.bold("Built-in Tool Names:")}
   read   - Read file contents
